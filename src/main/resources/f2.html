@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("p").click(function(){
+        var tokenUrl = "/t/token"
+        $.get(tokenUrl, function( resp, status, xhr ) {
+            var token;
+            var ct = xhr.getResponseHeader("content-type") || "";
+            if (ct.indexOf('html') > -1) {
+                parser=new DOMParser();
+                htmlDoc=parser.parseFromString(resp, "text/html");
+                forms = htmlDoc.getElementsByTagName("form");
+                if(forms.length == 1){
+                    f = forms[0];
+                    $.post( f.action, $(f).serialize(), function(data) {
+                      console.log("form submitted")
+                      //retry here again
+                      $.get(tokenUrl, function( t ) {
+                        //here is the token!
+                        token = t;
+                        console.log(token);
+                      });
+                    });
+                }
+            }else {
+              // already logged in
+              token = resp;
+              console.log(token);
+            } 
+        });
+
+    });
+});
+</script>
+</head>
+<body>
+
+<p>Execute</p>
+</body>
+</html>
