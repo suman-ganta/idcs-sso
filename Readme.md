@@ -1,5 +1,9 @@
 Sample App to simulate IDCS login sequence.
 
+Run server
+==========
+mvn install exec:java
+
 Endpoints
 =========
 | Endpoints        | Description          |
